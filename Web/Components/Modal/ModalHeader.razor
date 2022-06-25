@@ -1,0 +1,11 @@
+﻿
+@if(ChildContent != null){
+    <div class="app-modal-header">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

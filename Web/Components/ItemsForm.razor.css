@@ -1,0 +1,19 @@
+﻿.form {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.form button {
+    margin: 0 auto;
+    max-width: 200px;
+    width: 100%;
+}
+
+.form input {
+    margin: 0 auto;
+    max-width: 500px;
+    width: 100%;
+}

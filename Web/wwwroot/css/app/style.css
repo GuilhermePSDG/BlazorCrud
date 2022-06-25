@@ -1,0 +1,34 @@
+﻿
+button:disabled {
+    background: #354266;
+    color:GrayText;
+    cursor:not-allowed;
+}
+input, button {
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    box-shadow: 0 0 5px 0px #00000085;
+    color: white;
+    transition: all .3s;
+}
+input::placeholder {
+    color: #d0d0d0;
+}
+input {
+    background: #2f0c4d;
+    padding: 10px 20px;
+}
+button {
+    padding: 10px 30px;
+    background: #485a8a;
+}
+input:hover, input:focus
+{
+    background-color: #44156c;
+}
+
+button:hover, button:focus , button:hover:disabled{
+    background-color: #5f75af;
+}

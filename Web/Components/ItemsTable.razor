@@ -1,0 +1,69 @@
+﻿@inject ItemsClient client;
+
+
+<div id="table-scroll">
+    <table 
+        cellspacing="0" cellpadding="0"
+        class="table">
+        <thead>
+            <tr>
+                <th onclick="@(() => SortTable("name"))" class="app-col @(LastSort == "name" ? "active" : "")">
+                    Nome
+                    <span style="opacity : @(LastSort == "name" ? "1" : "0")" class="order-icon material-symbols-outlined @(Descending ? "active" : "" )">expand_more</span>
+                </th>
+                <th onclick="@(() => SortTable("value"))" class="app-col @(LastSort == "value" ? "active" : "")">
+                    Valor
+                    <span style="opacity : @(LastSort == "value" ? "1" : "0")" class="order-icon material-symbols-outlined @(Descending ? "active" : "" )">expand_more</span>
+                </th>
+                <th class="app-col active">
+                    Opções 
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (var index= 0; index < items.Count; index++)
+            {
+                int i = index;
+                <tr class="@((i % 2 == 0 ? "app-row" : "app-row highlight"))">
+                    <td scope="row">@items[i].name </td>
+                    <td>@items[i].value</td>
+                    <td>
+                        <span @onclick="async () => await DeleteItem(i)" class="options delete material-symbols-outlined"> delete </span>
+                        <span @onclick="async () => await onEditItemCliked.InvokeAsync(items[i])" class="options edit material-symbols-outlined"> edit </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public List<Item> items { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<Item> onEditItemCliked{ get; set; }
+
+
+    string? Error;
+    string LastSort = "";
+    bool Descending = false;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    public void SortTable(string PropertyName)
+    {
+        this.items = this.items.OrderByPropertyName(LastSort = PropertyName, this.Descending = !this.Descending).ToList();
+    }
+    public async Task DeleteItem(int index)
+    {
+        if(await client.DeleteAsync(items[index].id))
+            items.RemoveAt(index);
+    }
+ 
+}

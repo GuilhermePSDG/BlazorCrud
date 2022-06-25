@@ -1,0 +1,80 @@
+﻿@inject ItemsClient itemsClient;
+
+<div class="form">
+    <input
+        @onkeydown="KeyPress"
+        @bind-value="putPostItem.name" 
+        @bind-value:event="oninput"
+        placeholder="Nome do item" />
+    <input 
+        @onkeydown="KeyPress"
+        @bind-value="putPostItem.value" 
+        @bind-value:event="oninput"
+
+    placeholder="Valor do item" />
+    @if (ShowControls)
+    {
+        <button disabled="@(!putPostItem.IsValid)" @onclick="Act">@(ToEdit == null ? "Adicionar" : "Editar") item</button>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public bool ShowControls { get; set; } = true;
+    [Parameter]
+    public EventCallback<Item> onNewItem{ get; set; }
+    [Parameter]
+    public EventCallback<Item> onItemChanged{ get; set; }
+    public PostPutItem putPostItem = new PostPutItem();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    public async Task KeyPress(KeyboardEventArgs args)
+    {
+        if(args.Key == "Enter" && putPostItem.IsValid)
+            await Act();
+    }
+
+    public Item? ToEdit = null;
+
+    public void StartEdit(Item value)
+    {
+        this.ToEdit = value;
+        this.putPostItem = new(value.name, value.value);
+        StateHasChanged();
+    }
+    public async Task<bool> Act()
+    {
+        if (!putPostItem.IsValid) return false;
+        return await (ToEdit == null ? PostItem() : PutItem());
+    }
+
+    private async Task<bool> PutItem()
+    {
+        var changedItem = await this.itemsClient.PutAsync(this.ToEdit.id, putPostItem);
+        if(changedItem is not null)
+        {
+            await onItemChanged.InvokeAsync(changedItem);
+            ToEdit = null;
+            putPostItem.Zero();
+            return true;
+        }
+        return false;
+    }
+    private async Task<bool> PostItem()
+    {
+        var newItem = await this.itemsClient.PostAsync(putPostItem);
+        if (newItem is not null)
+        {
+            await onNewItem.InvokeAsync(newItem);
+            putPostItem.Zero();
+            return true;
+        }
+        return false;
+    }
+
+}

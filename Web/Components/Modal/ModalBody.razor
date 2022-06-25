@@ -1,0 +1,46 @@
+﻿@inject IJSRuntime js;
+
+@if(!IsHide && ChildContent!=null)
+{
+    <div class="app-modal-body @*@(IsHide ? "hide" : "")*@">
+            @ChildContent
+    </div>
+}
+
+<div @onclick="Close" class="app-modal-overlay @(IsHide ? "hide" : "")"></div>
+
+@code {
+
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private bool IsHide { get; set; } = true;
+
+    public void Close()
+    {
+        this.IsHide = true;
+    }
+    Func<Task> ToDoAfterLoad;
+    public void Show(Func<Task>? Then = null)
+    {
+        if(Then != null) this.ToDoAfterLoad = Then;
+        this.IsHide = false;
+    }
+    public void ChangeState() => IsHide = !IsHide;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(ToDoAfterLoad != null)
+        {
+            await ToDoAfterLoad();
+            ToDoAfterLoad = null;
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+}

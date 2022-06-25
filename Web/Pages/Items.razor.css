@@ -1,0 +1,28 @@
+﻿#items-title {
+    text-align: center;
+    margin: 0;
+    padding: 15px;
+    color: whitesmoke;
+    font-weight: bold;
+    background-image: linear-gradient(164deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    border-radius: 5px 5px 0 0;
+    position: relative;
+}
+#add-item-icon {
+    text-align: center;
+    text-align: center;
+    position: absolute;
+    right: 10%;
+    background: #44156c;
+    color: white;
+    padding: 2px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px 0px #00000080;
+    cursor: pointer;
+    transition: all .4s;
+}
+
+#add-item-icon:hover {
+    background-color: #5f189a;
+    transform: scale(1.1);
+}
